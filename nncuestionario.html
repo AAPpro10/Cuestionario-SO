@@ -1,0 +1,2349 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cuestionarios Sistemas Operativos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .question {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 800px;
+    }
+
+    .question h3 {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background: #0056b3;
+    }
+
+    .result {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #e9f7ef;
+      border: 1px solid #c3e6cb;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .correct {
+      color: green;
+    }
+
+    .incorrect {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Cuestionario Sistemas Operativos</h1>
+  <div style="max-width: 800px; margin: auto; text-align: center;">
+    <label for="examSelect"><strong>Selecciona el examen:</strong></label>
+    <select id="examSelect" onchange="cargarPreguntas()">
+      <option value="">-- Selecciona un examen --</option>
+      <option value="enero2026">Enero 2026</option> <option value="julio2025">Julio 2025</option>
+      <option value="enero2025">Enero 2025</option>
+      <option value="noviembre2024">Noviembre 2024</option>
+      <option value="septiembre2024">Septiembre 2024</option>
+      <option value="enero2024">Enero 2024</option>
+      <option value="septiembre2023">Septiembre 2023</option>
+      <option value="enero2023">Enero 2023</option>
+      <option value="noviembre2022">Noviembre 2022</option>
+      <option value="enero2022">Enero 2022</option>
+      <option value="todos">Todos</option>
+
+    </select>
+  </div>
+  <form id="quizForm"></form>
+  <button class="btn" onclick="corregir()">Corregir</button>
+  <div id="result" class="result" style="display:none;"></div>
+
+
+  <script>
+    // --- ENERO 2026 (NUEVO) ---
+    const enero2026 = [
+      {
+        "enunciado": "¿Cuál de las siguientes características de hardware es esencial para garantizar que un proceso obtenga una parte justa de la CPU y permitir conmutaciones de procesos equitativas?",
+        "opciones": [
+          "Cachés de memoria L1 y L2.",
+          "Unidad de Procesamiento Multinúcleo.",
+          "Temporizadores y relojes.",
+          "Administración de Memoria Virtual."
+        ],
+        "correcta": 2 // Respuesta C
+      },
+      {
+        "enunciado": "¿Qué componente del sistema operativo es responsable de cargar el estado de un proceso seleccionado por el planificador en la CPU para que inicie su ejecución?",
+        "opciones": [
+          "Scheduler (Planificador).",
+          "Dispatcher (Despachador).",
+          "Cargador de arranque (Bootloader).",
+          "El firmware UEFI."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "Durante el arranque del sistema, ¿qué función cumple el POST (Power-On Self Test)?",
+        "opciones": [
+          "Cargar el núcleo del sistema operativo en la memoria principal.",
+          "Localizar el dispositivo de arranque en el SSD o disco duro.",
+          "Ejecutar pruebas de hardware como la verificación de la RAM y la CPU.",
+          "Mostrar el menú de selección de sistemas operativos (GRUB)."
+        ],
+        "correcta": 2 // Respuesta C
+      },
+      {
+        "enunciado": "¿Qué técnica histórica permitía superponer operaciones de E/S con el procesamiento de la CPU almacenando datos en un dispositivo intermedio rápido (disco) en lugar de enviarlos directamente a periféricos lentos?",
+        "opciones": [
+          "Swapping.",
+          "Paginación.",
+          "Buffering asíncrono.",
+          "SPOOL (Simultaneous Peripheral Operating On-Line)."
+        ],
+        "correcta": 3 // Respuesta D
+      },
+      {
+        "enunciado": "En el mecanismo de cambio de modo durante una llamada al sistema, ¿cómo se produce técnicamente la transición del modo usuario al modo kernel?",
+        "opciones": [
+          "Mediante una instrucción de salto directo a la memoria del kernel.",
+          "A través de una excepción o interrupción de software (como int 0x80 o syscall).",
+          "Modificando manualmente el contador de programa (PC) desde el programa de usuario.",
+          "El compilador añade permisos de supervisor al ejecutable antes de lanzarlo."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "¿Qué sucede con un proceso en Linux si su padre muere antes de que el hijo haya finalizado?",
+        "opciones": [
+          "El proceso hijo muere automáticamente.",
+          "El proceso hijo se convierte en un Zombie permanente.",
+          "El proceso hijo es heredado por el proceso init (PID 1).",
+          "El sistema operativo suspende al hijo hasta que se asigne un nuevo padre."
+        ],
+        "correcta": 2 // Respuesta C
+      },
+      {
+        "enunciado": "¿Cuál es el registro del procesador que define el modo de ejecución actual (privilegiado vs. no privilegiado) y controla la habilitación de interrupciones?",
+        "opciones": [
+          "PC (Program Counter).",
+          "PSW (Program Status Word) o registros de Flags.",
+          "SP (Stack Pointer).",
+          "MMU (Memory Management Unit)."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "¿En qué se diferencia un cambio de contexto (Context Switch) de un simple cambio de modo?",
+        "opciones": [
+          "El cambio de modo no implica cambiar el proceso en ejecución, solo eleva privilegios.",
+          "El cambio de contexto es más rápido porque no guarda registros.",
+          "El cambio de modo requiere reiniciar la CPU, el cambio de contexto no.",
+          "Son exactamente lo mismo en sistemas multiprocesador."
+        ],
+        "correcta": 0 // Respuesta A
+      },
+      {
+        "enunciado": "¿Cuál es la diferencia fundamental entre un proceso y un hilo (thread)?",
+        "opciones": [
+          "Un proceso es más ligero y comparte memoria con otros procesos.",
+          "Los hilos de un mismo proceso comparten el espacio de direcciones y recursos del proceso.",
+          "Un hilo tiene su propia tabla de descriptores de archivos independiente del proceso.",
+          "Los procesos no requieren comunicación interprocesos (IPC)."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "¿Qué problema de rendimiento presentan los Hilos a Nivel de Usuario (ULT) 'puros' ante una llamada al sistema bloqueante?",
+        "opciones": [
+          "El kernel crea automáticamente un KLT para compensar el bloqueo.",
+          "Se produce un interbloqueo (deadlock) inmediato.",
+          "El kernel bloquea a todo el proceso, deteniendo todos los demás hilos ULT de la aplicación.",
+          "El hilo ULT sigue ejecutándose pero con datos corruptos."
+        ],
+        "correcta": 2 // Respuesta C
+      },
+      {
+        "enunciado": "¿Cuál es la desventaja principal del uso de instrucciones hardware como Test_and_Set() para implementar la exclusión mutua?",
+        "opciones": [
+          "Son imposibles de usar en sistemas con un solo procesador.",
+          "Emplean espera activa (busy waiting), desperdiciando ciclos de CPU.",
+          "No garantizan la exclusión mutua en secciones críticas largas.",
+          "Requieren el uso obligatorio de memoria virtual."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "En el contexto de la concurrencia, ¿qué se entiende por 'exclusión mutua'?",
+        "opciones": [
+          "Que todos los procesos deben ejecutarse al mismo tiempo.",
+          "El requisito de que solo un proceso pueda acceder a una sección crítica en un momento dado.",
+          "La capacidad de compartir variables sin usar bloqueos.",
+          "El intercambio forzoso de datos entre procesos distribuidos."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "¿Qué ocurre internamente en un semáforo cuando se ejecuta una operación 'P' (o wait) y el contador es igual a cero?",
+        "opciones": [
+          "El contador se pone en -1 y el proceso sigue.",
+          "El proceso se añade a una cola de espera y se bloquea.",
+          "El semáforo se destruye automáticamente por seguridad.",
+          "El proceso entra en espera activa hasta que el contador suba."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "¿Cuál es la ventaja de los monitores frente a los semáforos desde el punto de vista del programador?",
+        "opciones": [
+          "Permiten el paralelismo real en un solo núcleo.",
+          "No requieren el uso de variables de condición.",
+          "Ofrecen exclusión mutua implícita gestionada por el compilador.",
+          "Son más rápidos en sistemas distribuidos sin memoria compartida."
+        ],
+        "correcta": 2 // Respuesta C
+      },
+      {
+        "enunciado": "En el paso de mensajes, ¿qué caracteriza al direccionamiento indirecto?",
+        "opciones": [
+          "El remitente especifica el PID del destinatario en la llamada send.",
+          "Los mensajes se envían a una cola compartida o buzón (mailbox).",
+          "El mensaje se envía directamente a la memoria física del receptor.",
+          "Solo se puede usar en sistemas de un solo procesador."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "¿Cuál es el objetivo principal del algoritmo CFS (Completely Fair Scheduler) de Linux?",
+        "opciones": [
+          "Minimizar estrictamente el tiempo de retorno de los trabajos batch.",
+          "Ejecutar siempre el proceso con la ráfaga de CPU más corta (SJF).",
+          "Repartir el tiempo de CPU de forma proporcional al peso de cada proceso mediante el vruntime.",
+          "Maximizar la utilización de la energía en dispositivos móviles."
+        ],
+        "correcta": 2 // Respuesta C
+      },
+      {
+        "enunciado": "¿Qué planificador tiene como responsabilidad principal controlar el 'grado de multiprogramación'?",
+        "opciones": [
+          "Planificador a corto plazo.",
+          "Planificador a medio plazo.",
+          "Planificador a largo plazo (Job Scheduler).",
+          "El despachador (Dispatcher)."
+        ],
+        "correcta": 2 // Respuesta C
+      },
+      {
+        "enunciado": "¿Cuál es la principal diferencia entre la paginación simple y la memoria virtual?",
+        "opciones": [
+          "La paginación simple no permite la reubicación dinámica.",
+          "En paginación simple, todas las páginas de un proceso deben estar en memoria física a la vez.",
+          "La memoria virtual solo funciona en sistemas monoprocesador.",
+          "La paginación simple no utiliza tablas de páginas."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "¿Qué beneficio aporta la reubicación dinámica mediante registros base y límite?",
+        "opciones": [
+          "Elimina por completo la necesidad de una MMU.",
+          "Permite mover procesos en memoria sin necesidad de modificar sus direcciones lógicas.",
+          "Garantiza que no exista fragmentación interna en el proceso.",
+          "Permite que un proceso acceda a la memoria del kernel para acelerar la E/S."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "¿Por qué se utilizan las Tablas de Páginas Invertidas en sistemas de 64 bits?",
+        "opciones": [
+          "Porque son más fáciles de buscar que las tablas jerárquicas.",
+          "Para ahorrar memoria física, teniendo una entrada por cada marco real en lugar de por cada página virtual.",
+          "Para permitir que múltiples procesos compartan el mismo espacio de direcciones lógicas.",
+          "Porque el hardware moderno no soporta la paginación multinivel."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "- En la administración de memoria, el principio de localización espacial implica:",
+        "opciones": [
+          "Acceso frecuente a datos cercanos en memoria.",
+          "Acceso frecuente a datos temporalmente próximos.",
+          "Acceso aleatorio a bloques de memoria.",
+          "Acceso secuencial a bloques de memoria."
+        ],
+        "correcta": 0 // Respuesta A
+      },
+      {
+        "enunciado": "¿Cuál es la función de la función pthread_join en el contexto del siguiente código? (Ver código en examen original)",
+        "opciones": [
+          "Crear un nuevo hilo para procesar un archivo.",
+          "Esperar a que un hilo específico termine su ejecución.",
+          "Asignar un nombre de archivo a un hilo.",
+          "Unir todos"
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "En el problema de los filósofos, ¿cuál es el propósito principal de inicializar sem_init(&s[i],0,0); para cada i?",
+        "opciones": [
+          "Garantizar exclusión mutua global para que solo un filósofo pueda ejecutar código crítico a la vez.",
+          "Inicializar un semáforo privado por filósofo en estado 'cerrado' (0), de forma que el hilo pueda bloquearse hasta que sea despertado cuando pueda comer.",
+          "Evitar automáticamente el interbloqueo (deadlock) al impedir que dos filósofos vecinos compitan por recursos simultáneamente.",
+          "Sincronizar la creación de los hilos para que no comiencen a ejecutarse hasta que todos hayan sido creados."
+        ],
+        "correcta": 1 // Respuesta B
+      },
+      {
+        "enunciado": "En el código mostrado, ¿qué ocurriría si se eliminara el bucle que llama a join() sobre los hilos?",
+        "opciones": [
+          "El programa no compilaría porque std::thread exige llamar siempre a join().",
+          "El programa podría finalizar antes de que los hilos terminen su ejecución.",
+          "Los hilos se ejecutarían de forma secuencial en lugar de concurrente.",
+          "El sistema operativo finalizaría automáticamente todos los hilos cuando termine main() sin ningún efecto visible."
+        ],
+        "correcta": 1 // Respuesta B
+      }
+    ];
+
+    // --- JULIO 2025 ---
+    const julio2025 = [
+      {
+        "enunciado": "¿Cuál es el rol primordial de un semáforo en la gestión de la concurrencia de procesos o hilos en un sistema operativo?",
+        "opciones": [
+          "Administrar el intercambio de datos entre la memoria principal y el almacenamiento secundario.",
+          "Posibilitar la comunicación directa y el envío de información estructurada entre procesos.",
+          "Asegurar que solo un proceso o hilo acceda a una sección crítica a la vez y coordinar actividades entre elementos concurrentes.",
+          "Realizar la planificación a corto plazo de los procesos listos para su ejecución en la CPU."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Cuando un proceso invoca la operación semWait (o wait) sobre un semáforo, y el valor actual de dicho semáforo es cero (0), ¿cuál de las siguientes afirmaciones describe con mayor precisión la respuesta del sistema?",
+        "opciones": [
+          "El proceso invoca automáticamente la operación sem Signal para reiniciar el contador del semáforo.",
+          "La operación semWait se ignora, y el proceso continúa su ejecución de inmediato.",
+          "El proceso se bloquea y es insertado en la cola de procesos en espera asociada a ese semáforo.",
+          "El semáforo se bloquea, requiriendo que el sistema operativo lo reinicie."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Dentro de los esquemas de gestión de memoria, sin emplear memoria virtual, ¿cuál es la característica fundamental del método de paginación simple?",
+        "opciones": [
+          "Los procesos reciben asignaciones de memoria en particiones contiguas de longitud variable, que se ajustan exactamente a su tamaño, generando fragmentación externa que requiere compactación.",
+          "La memoria se organiza en segmentos lógicos de tamaño variable, que son visibles para el programador y se cargan completamente para la ejecución del proceso.",
+          "El espacio de memoria se divide en regiones estáticas de tamaño predefinido, donde los procesos se ubican en la partición más adecuada, pudiendo generar fragmentación interna en la misma.",
+          "La memoria principal se subdivide en porciones de tamaño fijo, mientras que cada proceso se estructura en unidades de igual tamaño que pueden ubicarse en cualquier porción disponible, no necesariamente contiguo."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "En el contexto de la gestión de memoria paginada, ¿cuál es la finalidad primordial de la tabla de páginas?",
+        "opciones": [
+          "Almacenar el historial de ejecución y los eventos de E/S pendientes de cada proceso activo.",
+          "Administrar la asignación de segmentos de tamaño variable a los programas en memoria.",
+          "Establecer la correspondencia entre las direcciones virtuales de las páginas de un proceso y las ubicaciones físicas de los marcos de página en la memoria principal.",
+          "Establecer la correspondencia entre las direcciones virtuales de las páginas de un proceso y las direcciones de las páginas cacheadas en memoria cache."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál de los siguientes no es un beneficio de usar tabla de páginas con el esquema de memoria virtual?",
+        "opciones": [
+          "Permite ejecutar procesos más grandes que la memoria física disponible.",
+          "Incrementa la velocidad de acceso a la memoria principal respecto a no usarla.",
+          "Reduce la fragmentación externa de la memoria a un único marco",
+          "Simplifica la programación al eliminar la necesidad de superposiciones (overlays)"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál es la función principal del Contador del Programa (PC) en el procesador?",
+        "opciones": [
+          "Almacenar los datos que están siendo actualmente manipulados por la ALU.",
+          "Controlar el acceso y la transferencia de datos hacia o desde los dispositivos de E/S",
+          "Contener la dirección de la próxima instrucción que el procesador debe ejecutar.",
+          "Gestionar la asignación de bloques de memoria virtual a marcos de página físicos."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes afirmaciones sobre las interrupciones es FALSA?",
+        "opciones": [
+          "Las interrupciones permiten que el procesador atienda eventos asíncronos.",
+          "Las interrupciones pueden ser generadas por dispositivos de E/S.",
+          "Las interrupciones no afectan al flujo de ejecución de un programa.",
+          "El procesador guarda el estado actual antes de atender una interrupción."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Qué característica fundamental define un sistema multiprogramado?",
+        "opciones": [
+          "La ejecución simultánea de distintos flujos de instrucciones en procesadores separados.",
+          "La coexistencia de varios procesos activos en la memoria principal.",
+          "La optimización del uso del procesador mediante la asignación de porciones de tiempo a las tareas.",
+          "La habilidad de los programas para usar un espacio de direcciones lógicas mayor que la memoria física."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Qué tipo de información esencial se almacena en el Bloque de Control de Proceso (BCP) para que el sistema operativo pueda gestionar una tarea en ejecución?",
+        "opciones": [
+          "El historial completo de todas las operaciones de E/S realizadas por el programa.",
+          "Los permisos de acceso a ficheros y la configuración de red del usuario que inició la tarea.",
+          "Los valores de los registros del procesador y el estado actual de ejecución del proceso.",
+          "La dirección del código fuente original del programa y la relación de bibliotecas vinculadas."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes afirmaciones describe correctamente las diferencias fundamentales entre un proceso y un hilo en el contexto de un sistema operativo?",
+        "opciones": [
+          "Un proceso actúa como contenedor de recursos que puede albergar múltiples hilos, mientras que un hilo representa una unidad de ejecución individual asociada exclusivamente a un solo proceso.",
+          "Los hilos dentro del mismo proceso comparten su espacio de memoria y otros recursos, a diferencia de los procesos que operan en espacios de direcciones aislados para garantizar la protección.",
+          "Los hilos son entidades más livianas que los procesos, lo que se traduce en una menor sobrecarga y mayor velocidad en las operaciones de creación, finalización y cambio de contexto.",
+          "Todas las opciones anteriores son correctas."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "¿Qué tipo de hilo depende de la biblioteca de hilos del lenguaje de programación?",
+        "opciones": [
+          "Hilo a nivel de kernel (KLT)",
+          "Hilo a nivel de usuario (ULT)",
+          "Hilo de demonio",
+          "Hilo zombie"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "En el contexto de los sistemas operativos, ¿cómo se describe una condición de carrera?",
+        "opciones": [
+          "Un escenario donde un proceso queda inactivo, a la espera de que un recurso específico sea liberado por otro.",
+          "Excepción que surge al intentar operar con una variable de memoria bloqueada por un semáforo.",
+          "Un fenómeno que ocurre cuando el desenlace final de operaciones que involucran datos compartidos entre múltiples flujos de ejecución es incierto pues depende de la secuencia de operaciones.",
+          "Un bucle ininterrumpido en la ejecución de un programa que impide que el hilo progrese o finalice sus tareas."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "En el diseño de los sistemas operativos, ¿cuál de las siguientes afirmaciones no se considera una prioridad principal para un sistema operativo de tiempo real?",
+        "opciones": [
+          "Asegurar el cumplimiento estricto de los plazos temporales de las tareas críticas.",
+          "Mantener una capacidad de respuesta predecible y rápida ante la llegada de interrupciones.",
+          "Optimizar la equidad en la distribución del tiempo de procesador entre todas las tareas activas.",
+          "Implementar mecanismos que permitan una operación continua incluso frente a fallos del sistema."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es la característica principal de un monitor que lo distingue en la gestión de acceso a recursos compartidos en un entorno de programación concurrente?",
+        "opciones": [
+          "Su capacidad para ejecutar automáticamente todos los hilos en paralelo sin necesidad de sincronización.",
+          "Garantiza que únicamente un proceso pueda ejecutar código dentro de sus procedimientos en un momento dado, asegurando la exclusión mutua.",
+          "Permite monitorizar el acceso a los procedimientos que exporta el monitor.",
+          "Se utiliza principalmente para gestionar la asignación de memoria virtual entre procesos."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "En el contexto de los monitores, ¿cuál es una diferencia fundamental en el comportamiento del proceso que emite una señal (csignal en Hoare o cnotify en Lampson/Redell) entre el modelo de monitor clásico de Hoare y el modelo alternativo de Lampson/Redell?",
+        "opciones": [
+          "En el modelo de Hoare, el proceso señalizador nunca interactúa con la cola de la condición, mientras que en Lampson/Redell, siempre se sitúa al final.",
+          "El modelo de Hoare permite que el proceso señalizador continúe su ejecución sin interrupciones, a diferencia del modelo de Lampson/Redell.",
+          "En el modelo de Hoare, el proceso que señaliza se bloquea o es movido a una cola de \"cortesía\" para ceder inmediatamente el control del monitor, mientras que en el de Lampson/Redell, el proceso que notifica (cnotify) continúa su ejecución hasta salir del monitor o esperar en otra condición.",
+          "El modelo de Hoare solo soporta un proceso esperando por una condición, mientras que Lampson/Redell permite múltiples procesos esperando."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Considere un sistema de memoria virtual que utiliza paginación. Si las direcciones virtuales son de 32 bits, el tamaño de cada página es de 4 KB, y cada entrada de la tabla de páginas ocupa 4 bytes, ¿cuál es el espacio de direccionamiento lógico máximo que puede tener un proceso si su tabla de páginas debe caber completamente en una única página física?",
+        "opciones": [
+          "1 GB",
+          "2 GB",
+          "4 GB",
+          "4 MB"
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "En un sistema operativo que utiliza memoria virtual paginada, ¿cuál es la estructura de hardware de alta velocidad que tiene como propósito principal reducir la latencia de las operaciones de traducción de direcciones lógicas a físicas?",
+        "opciones": [
+          "La caché de datos de la CPU.",
+          "El búfer de traducción anticipada (TLB).",
+          "La tabla de páginas en memoria principal.",
+          "El registro de dirección de memoria (MAR)."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "En el ámbito de la planificación de la CPU, ¿cuál de las siguientes políticas no expulsivas prioriza la ejecución de procesos basándose en la estimación de su duración total más corta, con el objetivo de minimizar el tiempo medio de estancia (turnaround time) para el conjunto de trabajos?",
+        "opciones": [
+          "Primero el Proceso Más Corto (SPN)",
+          "Menor Tiempo Restante (SRTN)",
+          "Primero en Llegar, Primero en Servir (FCFS)",
+          "Turno Rotatorio (Round Robin)"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "Un canal de Acceso Directo a Memoria (DMA) se emplea en un sistema operativo con el objetivo principal de:",
+        "opciones": [
+          "Gestionar la asignación de memoria virtual a los procesos, optimizando el uso de la RAM disponible.",
+          "Acelerar el procesamiento aritmético y lógico de la CPU mediante la precarga de instrucciones.",
+          "Permitir que el módulo de E/S transfiera datos directamente hacia y desde la memoria principal sin la intervención constante del procesador, mejorando la eficiencia general del sistema.",
+          "Establecer una conexión de red inalámbrica de alta velocidad entre el computador y los dispositivos periféricos"
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es una ventaja del paso de mensajes en comparación con los semáforos y monitores?",
+        "opciones": [
+          "Mayor eficiencia en sistemas de memoria compartida.",
+          "Comunicación explícita entre procesos.",
+          "Menor complejidad de implementación.",
+          "Flexibilidad en la sincronización."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "Considere el fragmento de código C donde dos hilos incrementan una variable global compartida (contador_global) sin sincronización explícita. ¿Cuál de las siguientes afirmaciones describe más precisamente el resultado esperado de la ejecución concurrente de este código?",
+        "opciones": [
+          "El valor final de contador_global será siempre 200.000, ya que los sistemas operativos modernos garantizan la atomicidad de operaciones simples de incremento como ++.",
+          "El programa entrará en un interbloqueo (deadlock) porque ambos hilos intentarán acceder a la misma variable compartida simultáneamente, bloqueándose mutuamente.",
+          "El valor final de contador global será siempre menor que 200.000 debido a un problema de inanición (starvation) de alguno de los hilos que impide su ejecución completa.",
+          "El valor final de contador_global será generalmente menor que 200.000 y puede variar entre diferentes ejecuciones, debido a una condición de carrera (race condition) en la operación de incremento."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "Considere el código C donde se crean dos hilos y cada uno intenta adquirir dos cerrojos (mutexes) compartidos en un orden diferente (Hilo 1: Mutex A luego B; Hilo 2: Mutex B luego A). ¿Cuál de las siguientes afirmaciones describe el resultado más probable de la ejecución de este código?",
+        "opciones": [
+          "El programa siempre finalizará correctamente, ya que cada hilo liberará los recursos que adquiera, garantizando el progreso.",
+          "El programa tiene una alta probabilidad de entrar en un estado de interbloqueo (deadlock), donde ambos hilos se bloquean mutuamente esperando por los recursos que el otro posee.",
+          "El valor final de alguna variable compartida puede ser incorrecto debido a una condición de carrera, aunque el programa siempre terminará.",
+          "Uno de los hilos sufrirá inanición y nunca podrá adquirir ambos mutexes, mientras el otro hilo finaliza correctamente."
+        ],
+        "correcta": 1
+      }
+    ];
+
+    // --- ENERO 2025 ---
+    const enero2025 = [
+      {
+        "enunciado": "¿Cuál es la función principal de un semáforo?",
+        "opciones": [
+          "Permitir la comunicación entre procesos mediante el envío de mensajes.",
+          "Controlar el acceso a recursos compartidos por varios hilos.",
+          "Implementar la exclusión mutua y la sincronización entre procesos.",
+          "Gestionar la memoria virtual del sistema."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "En la implementación de semáforos, ¿qué ocurre cuando un proceso ejecuta la operación wait y el valor del semáforo es 0?",
+        "opciones": [
+          "El proceso continúa su ejecución sin esperar.",
+          "El proceso incrementa el valor del semáforo y continúa su ejecución.",
+          "El proceso se bloquea y se añade a la cola de espera del semáforo.",
+          "El proceso envía una señal al semáforo para que otros procesos puedan esperar."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes opciones describe mejor la paginación simple?",
+        "opciones": [
+          "La memoria se divide en particiones de tamaño variable para los procesos.",
+          "La memoria se divide en bloques de tamaño fijo y cada proceso se asigna a un bloque.",
+          "La memoria se divide en marcos de tamaño fijo y los procesos se dividen en páginas del mismo tamaño.",
+          "La memoria se asigna a los procesos en segmentos de tamaño variable."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Qué función tiene la tabla de páginas en la paginación?",
+        "opciones": [
+          "Almacena el código fuente de los programas.",
+          "Asigna las páginas lógicas de un proceso a los marcos físicos de la memoria.",
+          "Contiene información sobre el estado de los dispositivos de E/S.",
+          "Gestiona la cola de procesos listos para ejecutarse."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál es el principal beneficio de la memoria virtual?",
+        "opciones": [
+          "Permite ejecutar procesos más grandes que la memoria física disponible.",
+          "Mejora la velocidad de acceso a la memoria principal.",
+          "Reduce la fragmentación de la memoria.",
+          "Todas las anteriores."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "¿Cuál es la función del Contador del Programa (PC) en un procesador?",
+        "opciones": [
+          "Almacenar los datos que se están procesando.",
+          "Almacenar la dirección de la próxima instrucción a ejecutar.",
+          "Controlar el acceso a los dispositivos de E/S.",
+          "Gestionar las interrupciones del sistema."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes afirmaciones sobre las interrupciones es FALSA?",
+        "opciones": [
+          "Las interrupciones permiten que el procesador atienda eventos asíncronos.",
+          "Las interrupciones pueden ser generadas por dispositivos de E/S.",
+          "Las interrupciones no afectan al flujo de ejecución de un programa.",
+          "El procesador guarda el estado actual antes de atender una interrupción."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Qué característica define un sistema multiprogramado?",
+        "opciones": [
+          "Ejecución de varios programas en diferentes procesadores.",
+          "Mantenimiento de varios procesos en la memoria principal simultáneamente.",
+          "Asignación de tiempo de CPU a los procesos en función de su prioridad.",
+          "Uso de memoria virtual para ampliar la memoria principal disponible."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Qué información se encuentra en un Bloque de Control de Proceso (BCP o PCB)?",
+        "opciones": [
+          "El código fuente del proceso.",
+          "El nombre del usuario que ejecuta el proceso.",
+          "El estado actual del proceso y la ubicación en memoria.",
+          "Los datos de entrada y salida del proceso."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es la diferencia entre un proceso y un hilo?",
+        "opciones": [
+          "Un proceso puede tener varios hilos, mientras que un hilo solo puede pertenecer a un proceso.",
+          "Los hilos comparten el mismo espacio de direcciones, mientras que los procesos tienen espacios de direcciones separados.",
+          "Los hilos son más ligeros que los procesos y su cambio de contexto es más rápido.",
+          "Todas las anteriores."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "¿Qué tipo de hilo depende de la biblioteca de hilos del lenguaje de programación?",
+        "opciones": [
+          "Hilo a nivel de kernel (KLT)",
+          "Hilo a nivel de usuario (ULT)",
+          "Hilo de demonio",
+          "Hilo zombie"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Qué es una condición de carrera?",
+        "opciones": [
+          "Un estado en el que un proceso se bloquea esperando un recurso.",
+          "Un error que ocurre cuando un hilo intenta acceder a una variable no inicializada.",
+          "Una situación en la que el resultado de la ejecución de varios hilos depende del orden en que se ejecutan.",
+          "Un problema que se produce cuando un hilo se ejecuta de forma infinita."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes opciones NO es una preocupación del sistema operativo en un entorno concurrente?",
+        "opciones": [
+          "Seguimiento del estado de los procesos.",
+          "Asignación y liberación de recursos para cada proceso.",
+          "Sincronización de la ejecución de procesos para evitar condiciones de carrera.",
+          "Compilación de código fuente en lenguaje máquina."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "¿Cuál es la diferencia entre un semáforo binario y un semáforo general?",
+        "opciones": [
+          "Un semáforo binario solo puede tener valores 0 o 1, mientras que un semáforo general puede tener cualquier valor entero.",
+          "Un semáforo binario se utiliza para la exclusión mutua, mientras que un semáforo general se utiliza para la sincronización.",
+          "Un semáforo binario es más eficiente que un semáforo general.",
+          "No hay diferencia entre un semáforo binario y un semáforo general."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes opciones describe mejor un monitor?",
+        "opciones": [
+          "Una variable global que se utiliza para sincronizar procesos.",
+          "Una cola de mensajes que permite la comunicación entre procesos.",
+          "Un módulo de código que encapsula datos compartidos y métodos para acceder a ellos de forma segura.",
+          "Una técnica de planificación del procesador que asigna tiempo de CPU a los procesos en función de su prioridad."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es la diferencia entre paginación y segmentación?",
+        "opciones": [
+          "La paginación divide la memoria en marcos de tamaño fijo, mientras que la segmentación divide la memoria en segmentos de tamaño variable.",
+          "La paginación se utiliza para la gestión de la memoria virtual, mientras que la segmentación se utiliza para la protección de la memoria.",
+          "La paginación es más eficiente que la segmentación.",
+          "No hay diferencia entre paginación y segmentación."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "¿Qué es la fragmentación interna?",
+        "opciones": [
+          "Espacio desperdiciado en el disco debido a la asignación de bloques no contiguos.",
+          "Espacio desperdiciado dentro de un marco de página porque el tamaño del proceso no es un múltiplo del tamaño de página.",
+          "Espacio desperdiciado en la memoria principal debido a la segmentación.",
+          "Espacio desperdiciado en la memoria caché debido a la proximidad de referencias."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Qué ocurre cuando un proceso intenta acceder a una página que no está en la memoria principal?",
+        "opciones": [
+          "El proceso se bloquea y espera a que la página se cargue en memoria.",
+          "Se produce un error de segmentación y el proceso se termina.",
+          "El sistema operativo busca la página en el disco y la copia en la memoria caché.",
+          "El proceso continúa su ejecución ignorando la falta de la página."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "¿Qué estructura de datos se utiliza para acelerar la traducción de direcciones virtuales a físicas en la memoria virtual?",
+        "opciones": [
+          "Tabla de páginas",
+          "TLB (Translation Lookaside Buffer)",
+          "Caché de datos",
+          "Pila del sistema"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Qué tipo de planificador decide qué proceso obtiene la CPU después de cada cambio de contexto?",
+        "opciones": [
+          "Planificador de corto plazo",
+          "Planificador de largo plazo",
+          "Planificador de medio plazo",
+          "Planificador de entrada/salida"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "En la administración de memoria, el principio de localización espacial implica:",
+        "opciones": [
+          "Acceso frecuente a datos cercanos en memoria.",
+          "Acceso frecuente a datos temporalmente próximos.",
+          "Acceso aleatorio a bloques de memoria.",
+          "Acceso secuencial a bloques de memoria."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "¿Cuál es una característica de la política de reemplazo de páginas de LRU?",
+        "opciones": [
+          "Remueve la página menos recientemente usada.",
+          "Utiliza un bit de referencia.",
+          "Elige una página aleatoria para reemplazar.",
+          "Remueve la página más recientemente usada."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "¿Cuál es una característica clave del direccionamiento uno a muchos (broadcast) en el paso de mensajes?",
+        "opciones": [
+          "Solo un proceso puede recibir el mensaje enviado.",
+          "El mensaje se envía a un proceso receptor específico y único.",
+          "Varios procesos pueden recibir el mismo mensaje desde un canal compartido.",
+          "El mensaje se envía a múltiples destinatarios, pero cada uno recibe una copia única del mensaje."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es una característica de la E/S asincrónica?",
+        "opciones": [
+          "El CPU espera a que finalice cada operación.",
+          "La operación de E/S no bloquea el proceso.",
+          "Se utiliza en sistemas sin multitarea.",
+          "Permite la ejecución secuencial de operaciones de E/S."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "En un sistema multiprocesador",
+        "opciones": [
+          "Solo pueden ejecutarse hilos del mismo proceso concurrentemente.",
+          "Varios hilos de un mismo proceso se pueden ejecutar simultáneamente.",
+          "Se pueden ejecutar varios hilos pero en el procesador asignado al proceso.",
+          "Ninguna de las anteriores es correcta"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál es una ventaja del paso de mensajes en comparación con los semáforos y monitores?",
+        "opciones": [
+          "Mayor eficiencia en sistemas de memoria compartida.",
+          "Comunicación explícita entre procesos.",
+          "Menor complejidad de implementación.",
+          "Flexibilidad en la sincronización."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "Cuando quiero eliminar líneas duplicadas en un fichero de texto en linux, ¿por qué es importante ordenar las líneas del archivo temporal antes de utilizar el comando uniq?",
+        "opciones": [
+          "Para optimizar el rendimiento del script y reducir el tiempo de ejecución.",
+          "Para asegurar que el archivo de salida tenga el mismo orden que los archivos de entrada.",
+          "Para que el comando uniq pueda detectar y eliminar todas las líneas duplicadas, incluso si no son consecutivas.",
+          "Para evitar errores de sintaxis en el script."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es la función del comando RANDOM % 100 en un script Bash?",
+        "opciones": [
+          "Generar un número aleatorio entre 0 y 100, incluyendo ambos extremos.",
+          "Calcular el resto de la división del valor de la variable RANDOM entre 100.",
+          "Asignar un valor aleatorio a la variable RANDOM, comprendido entre 0 y 99.",
+          "Generar un número aleatorio entre 0 y 99."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "¿Cuál es la función de la función pthread_join en el contexto del siguiente código?",
+        "opciones": [
+          "Crear un nuevo hilo para procesar un archivo.",
+          "Esperar a que un hilo específico termine su ejecución.",
+          "Asignar un nombre de archivo a un hilo.",
+          "Unir todos los hilos de ejecución en uno solo."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes opciones describe correctamente la función principal de un pipe en Linux?",
+        "opciones": [
+          "Permite la comunicación entre procesos mediante la creación de un archivo temporal.",
+          "Es un mecanismo de sincronización entre hilos de un mismo proceso.",
+          "Proporciona una conexión unidireccional para transmitir datos entre procesos.",
+          "Sirve para redirigir la salida estándar de un comando a un archivo."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Respecto al código: ¿Cuál sería el principal inconveniente de utilizar la función strtok en un contexto multihilo?",
+        "opciones": [
+          "strtok no es una función reentrante, lo que puede llevar a resultados inesperados en un entorno multihilo.",
+          "strtok es demasiado lenta para ser utilizada en aplicaciones multihilo.",
+          "strtok solo puede ser utilizada con cadenas de caracteres ASCII, lo que limita su uso en entornos multibyte.",
+          "strtok modifica la cadena original, lo que puede causar problemas si se accede a la cadena desde múltiples hilos simultáneamente."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "La variable de condición (pthread_cond_t) condPlato en el código, realmente que efecto tiene en el bucle while es:",
+        "opciones": [
+          "Si el mutex está bloqueado pone la variable condPlato a false",
+          "Si no se cumple la condición del while y mutex está bloqueado se pone a true la variable condPlato",
+          "Si entra en el while el hilo se bloquea en la variable de condición, liberando el mutex simultáneamente y hasta que otro proceso haga un pthread_cond_signal sobre la variable de condición.",
+          "Si entra en el while el hilo se bloquea en la variable de condición gracias a que el mutex esta bloqueado, hasta que otro proceso haga un pthread_mutex_unlock(&mutex)"
+        ],
+        "correcta": 2
+      }
+    ];
+
+    // --- NOVIEMBRE 2024 ---
+    const noviembre2024 = [
+      {
+        "enunciado": "Qué tipo de planificador decide qué proceso obtiene la CPU después de cada cambio de contexto?",
+        "opciones": [
+          "Planificador de corto plazo",
+          "Planificador de largo plazo",
+          "Planificador de medio plazo",
+          "Planificador de entrada/salida"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "¿Cuál es la principal ventaja de la segmentación con paginación frente a la segmentación pura?",
+        "opciones": [
+          "Reduce la fragmentación interna.",
+          "Permite el uso de memoria virtual.",
+          "Reduce la fragmentación externa.",
+          "Es más rápido en sistemas de gran tamaño."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "En la administración de memoria, el principio de localización espacial implica:",
+        "opciones": [
+          "Acceso frecuente a datos cercanos en memoria.",
+          "Acceso frecuente a datos temporalmente próximos.",
+          "Acceso aleatorio a bloques de memoria.",
+          "Acceso secuencial a bloques de memoria."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "¿Cuál es una característica de la política de reemplazo de páginas de LRU?",
+        "opciones": [
+          "Remueve la página menos recientemente usada.",
+          "Utiliza un bit de referencia.",
+          "Elige una página aleatoria para reemplazar.",
+          "Remueve la página más recientemente usada."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "En un sistema operativo multitarea, ¿qué ocurre durante un cambio de contexto?",
+        "opciones": [
+          "Se borra toda la memoria del proceso anterior.",
+          "Se guarda el estado del proceso actual y se carga el del próximo.",
+          "Se mueve el proceso a memoria secundaria.",
+          "Se termina el proceso actual."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Respecto a los threads, qué desventaja es cierta?",
+        "opciones": [
+          "No pueden compartir datos.",
+          "No permiten sincronización.",
+          "Pueden generar condiciones de carrera.",
+          "Requieren más tiempo de cambio de contexto."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Qué tipo de fragmentación es típica de la administración de memoria por paginación?",
+        "opciones": [
+          "Fragmentación externa.",
+          "Fragmentación interna.",
+          "Fragmentación dinámica.",
+          "Fragmentación permanente."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál es una característica clave del direccionamiento uno a muchos (broadcast) en el paso de mensajes?",
+        "opciones": [
+          "Solo un proceso puede recibir el mensaje enviado.",
+          "El mensaje se envía a un proceso receptor específico y único.",
+          "Varios procesos pueden recibir el mismo mensaje desde un canal compartido.",
+          "El mensaje se envía a múltiples destinatarios, pero cada uno recibe una copia única del mensaje."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es una característica de la E/S asincrónica?",
+        "opciones": [
+          "El CPU espera a que finalice cada operación.",
+          "La operación de E/S no bloquea el proceso.",
+          "Se utiliza en sistemas sin multitarea.",
+          "Permite la ejecución secuencial de operaciones de E/S."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "La memoria caché es:",
+        "opciones": [
+          "Un tipo de memoria virtual.",
+          "Almacenamiento principal del sistema.",
+          "Una memoria de acceso rápido y tamaño limitado.",
+          "La unidad principal de almacenamiento del sistema."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "En un sistema operativo, un deadlock ocurre cuando:",
+        "opciones": [
+          "Los procesos compiten por recursos.",
+          "Los procesos se sincronizan correctamente.",
+          "Los procesos esperan indefinidamente por recursos.",
+          "No hay suficiente espacio en memoria."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "La tabla de páginas es esencial en sistemas de:",
+        "opciones": [
+          "Memoria virtual.",
+          "Memoria segmentada.",
+          "Sistemas sin paginación.",
+          "Sistemas monoprocesador."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "¿Qué técnica de administración de memoria permite utilizar más memoria de la físicamente disponible?",
+        "opciones": [
+          "Segmentación.",
+          "Paginación.",
+          "Memoria virtual.",
+          "Fragmentación."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "En un sistema operativo, un proceso en estado \"bloqueado\" está:",
+        "opciones": [
+          "Ejecutándose.",
+          "En espera de un recurso.",
+          "En la cola de listos.",
+          "Finalizado."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "En un sistema multiprocesador",
+        "opciones": [
+          "Solo pueden ejecutarse hilos del mismo proceso concurrentemente.",
+          "Varios hilos de un mismo proceso se pueden ejecutar simultáneamente.",
+          "Se pueden ejecutar varios hilos pero en el procesador asignado al proceso.",
+          "Ninguna de las anteriores es correcta"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Qué elemento ayuda a reducir la sobrecarga de la CPU en operaciones de entrada/salida?",
+        "opciones": [
+          "Memoria caché.",
+          "DMA (acceso directo a memoria).",
+          "Semáforo.",
+          "Tabla de procesos."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál de estos algoritmos de reemplazo de páginas se apoya en el bit de referencia?",
+        "opciones": [
+          "FIFO.",
+          "OPT.",
+          "SJF.",
+          "Algoritmo del reloj / segunda oportunidad."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "La TLB es una estructura usada para:",
+        "opciones": [
+          "Reducir el tiempo de la traducción de direcciones de memoria.",
+          "Almacenar el estado de un proceso ceso cuando ocurre un cambio de contexto.",
+          "Almacenar el estado de las páginas no válidas de un proceso.",
+          "Almacenar los punteros a las pilas de los procesos"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "En el esquema de segmentación, ¿qué información contiene la tabla de descriptores de segmento?",
+        "opciones": [
+          "Dirección física completa de cada segmento.",
+          "Tamaño y dirección base de cada segmento.",
+          "Nombres y tamaños de los segmentos.",
+          "Números de página y desplazamientos."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál es una ventaja del paso de mensajes en comparación con los semáforos y monitores?",
+        "opciones": [
+          "Mayor eficiencia en sistemas de memoria compartida.",
+          "Comunicación explícita entre procesos.",
+          "Menor complejidad de implementación.",
+          "Flexibilidad en la sincronización."
+        ],
+        "correcta": 1
+      }
+    ];
+
+    // --- SEPTIEMBRE 2024 ---
+    const septiembre2024 = [
+      {
+        "enunciado": "¿Cuál de las siguientes afirmaciones describe mejor la relación entre OpenMP y los hilos a nivel de usuario (ULT)?",
+        "opciones": [
+          "OpenMP utiliza hilos a nivel de kernel (KLT) para la paralelización en sistemas distribuidos.",
+          "OpenMP no utiliza hilos, sino procesos separados en sistemas distribuidos.",
+          "OpenMP utiliza hilos a nivel de usuario (ULT) para la paralelización en sistemas de memoria compartida.",
+          "OpenMP se enfoca en la comunicación entre procesos en sistemas de memoria distribuida."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes afirmaciones describe correctamente el proceso de traducción de direcciones en un sistema de paginación simple sin memoria virtual?",
+        "opciones": [
+          "Las direcciones lógicas se traducen directamente en direcciones físicas sin necesidad de una tabla de páginas.",
+          "Las direcciones lógicas se dividen en segmentos y se traducen a direcciones físicas mediante una tabla de segmentos.",
+          "Las direcciones lógicas se dividen en páginas, que se asignan a marcos de página en la memoria física utilizando una tabla de páginas.",
+          "Las direcciones lógicas se traducen a direcciones físicas utilizando un algoritmo de reemplazo de páginas."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es una característica clave del direccionamiento uno a muchos (broadcast) en el paso de mensajes?",
+        "opciones": [
+          "Solo un proceso puede recibir el mensaje enviado.",
+          "El mensaje se envía a un proceso receptor específico y único.",
+          "Varios procesos pueden recibir el mismo mensaje desde un canal compartido.",
+          "El mensaje se envía a múltiples destinatarios, pero cada uno recibe una copia única del mensaje."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes es una ventaja de los monitores sobre los semáforos?",
+        "opciones": [
+          "Los monitores requieren manejo manual de la exclusión mutua.",
+          "Los monitores permiten la exclusión mutua implícita, simplificando la programación concurrente.",
+          "Los monitores son menos seguros y propensos a errores comparados con los semáforos.",
+          "Los monitores son más flexibles que los semáforos para cualquier problema de sincronización."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál es una ventaja de utilizar la función intercambiar() o swap() para la exclusión mutua en sistemas multiprocesador?",
+        "opciones": [
+          "Requiere intervención manual para cada operación.",
+          "Asegura que las operaciones se realicen de forma indivisible y eficiente en un entorno concurrente.",
+          "No garantiza la exclusión mutua y depende del programador manejar las condiciones de carrera.",
+          "Es más sencilla de implementar que cualquier otra técnica de sincronización."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuándo es más recomendable utilizar procesos en lugar de hilos en una aplicación?",
+        "opciones": [
+          "Cuando se requiere un alto grado de aislamiento y seguridad entre unidades de ejecución.",
+          "Cuando las tareas son altamente dependientes y requieren comunicación constante.",
+          "Cuando la aplicación necesita maximizar la velocidad de cambio de contexto.",
+          "Cuando se necesita acceso compartido a la misma memoria por todos los hilos."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "¿Cuál de los siguientes componentes es comúnmente encontrado en cada entrada de la tabla de páginas en un sistema de memoria virtual?",
+        "opciones": [
+          "El número de página lógica y su dirección de memoria secundaria.",
+          "El número de marco de página (frame number) y bits de control.",
+          "La dirección física completa y el tamaño de la página.",
+          "La dirección lógica y el número de páginas en memoria."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "La fragmentación interna",
+        "opciones": [
+          "Se produce con paginación y con segmentación.",
+          "Solo se produce en el último segmento de la tabla de segmentos del proceso",
+          "Se produce sólo cuando tenemos un sistema de memoria con paginación o particiones estáticas",
+          "Ninguna las anteriores es correcta."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Un hilo",
+        "opciones": [
+          "Es un procedimiento de un proceso que tiene asignado recursos.",
+          "Es la unidad propietaria de los recursos",
+          "Comparte la pila de ejecución con los otros hilos.",
+          "Ninguna de las anteriores es cierta."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "En un sistema multiprocesador",
+        "opciones": [
+          "Solo pueden ejecutarse hilos del mismo proceso concurrentemente.",
+          "Varios hilos de un mismo proceso se pueden ejecutar simultáneamente.",
+          "Se pueden ejecutar varios hilos pero en el procesador asignado al proceso.",
+          "Ninguna de las anteriores es correcta"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes afirmaciones NO es correcta?",
+        "opciones": [
+          "Los semáforos solucionan el problema de la espera activa",
+          "Los semáforos solucionan el problema de la exclusión mutua y la sincronización",
+          "Los semáforos binarios sólo pueden ser usados simultáneamente por dos procesos",
+          "Los semáforos de cuenta pueden ser usados simultáneamente por cualquier número de procesos."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "En Linux, la llamada al sistema exec():",
+        "opciones": [
+          "Crea un nuevo proceso con la misma imagen del proceso actual y con un PID diferente.",
+          "Cambia la imagen (código) del proceso actual y le asigna un nuevo PID.",
+          "Carga una nueva imagen de código en la memoria del proceso actual.",
+          "Ejecuta el proceso hijo indicado en el parámetro de la llamada."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "En un sistema operativo basado en procesos, ¿cómo se maneja el núcleo del sistema operativo en relación con los procesos de usuario?",
+        "opciones": [
+          "El núcleo se ejecuta en un espacio de direcciones separado de todos los procesos de usuario y no interactúa con ellos directamente.",
+          "El núcleo se ejecuta dentro del espacio de direcciones de un proceso de usuario específico como una biblioteca compartida.",
+          "El núcleo se ejecuta como un proceso especial conocido como \"proceso cero\" o \"proceso del sistema\", interactuando con otros procesos del sistema mediante IPC.",
+          "El núcleo se ejecuta como un módulo cargado en el espacio de direcciones de un proceso de usuario, permitiendo la personalización del sistema operativo."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es la misión del planificador de largo plazo o planificador de alto nivel?",
+        "opciones": [
+          "Realizar el despacho de los procesos que están en la cola de preparados, y en particular realizar los cambios de contexto.",
+          "En los sistemas de tiempo real, realizar una planificación previa de la carga de trabajo que se va a enviar al sistema, para asegurar que se cumplen los plazos de ejecución.",
+          "Regular la admisión de nuevos procesos a la cola de preparados, para mantener el grado de multiprogramación por debajo de un límite.",
+          "Permitir la entrada de procesos en el sistema con un instante de ejecución posterior en el tiempo."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál de estos algoritmos de reemplazo de páginas se apoya en el bit de referencia?",
+        "opciones": [
+          "FIFO.",
+          "OPT.",
+          "SJF.",
+          "Algoritmo del reloj / segunda oportunidad."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "La TLB es una estructura usada para:",
+        "opciones": [
+          "Reducir el tiempo de la traducción de direcciones de memoria.",
+          "Almacenar el estado de un proceso cuando ocurre un cambio de contexto.",
+          "Almacenar el estado de las páginas no válidas de un proceso.",
+          "Almacenar los punteros a las pilas de los procesos"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "El controlador de E/S y la memoria intercambian datos directamente, sin la intervención de la CPU, cuando se tiene:",
+        "opciones": [
+          "E/S controlada por programa",
+          "E/S por interrupciones",
+          "DMA",
+          "Ninguna de las anteriores"
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes métricas es especialmente relevante en sistemas interactivos y afecta la percepción de la velocidad del sistema por parte del usuario?",
+        "opciones": [
+          "Throughput (Rendimiento)",
+          "Tiempo de Respuesta Promedio",
+          "Inanición (Starvation)",
+          "Criterios de Justicia (Fairness)"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "En el esquema de segmentación, ¿qué información contiene la tabla de descriptores de segmento?",
+        "opciones": [
+          "Dirección física completa de cada segmento.",
+          "Tamaño y dirección base de cada segmento.",
+          "Nombres y tamaños de los segmentos.",
+          "Números de página y desplazamientos."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál es una ventaja del paso de mensajes en comparación con los semáforos y monitores?",
+        "opciones": [
+          "Mayor eficiencia en sistemas de memoria compartida.",
+          "Comunicación explícita entre procesos.",
+          "Menor complejidad de implementación.",
+          "Flexibilidad en la sincronización."
+        ],
+        "correcta": 1
+      }
+    ];
+
+    // --- ENERO 2024 ---
+    const enero2024 = [
+      {
+        "enunciado": "Sea el siguiente programa, indicar que respuesta es falsa. Program Ejemplo; Var a,b:integer; s1, s2: semaforo; procedure P1; begin wait(s1), a:=a+1; if a==2 then wait(s2); b:=2*a; signal(s2); signal(s1); end; procedure P2; begin wait(s2), wait(s1); a:=a+2; signal(s1); b:=2*b; signal(s2); end; Begin s1:=1; s2:=1; a:=0; b=2; cobegin p1; p2; coend; writeln(trunc(b/a)); end;",
+        "opciones": [
+          "Se pueden presentar interbloqueos.",
+          "La ejecución del programa podrá dar como resultado la impresión de un 4",
+          "La ejecución del programa podrá dar como resultado la impresión de un 1",
+          "La ejecución del programa podrá dar como resultado la impresión de un 2"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "La fragmentación interna",
+        "opciones": [
+          "Se produce con paginación y con segmentación.",
+          "Solo se produce en el último segmento de la tabla de segmentos del proceso",
+          "Se produce sólo cuando tenemos un sistema de memoria con paginación o particiones estáticas",
+          "Ninguna las anteriores es correcta."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Un hilo",
+        "opciones": [
+          "Es un procedimiento de un proceso que tiene asignado recursos.",
+          "Es la unidad propietaria de los recursos",
+          "Comparte la pila de ejecución con los otros hilos.",
+          "Ninguna de las anteriores es cierta."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "Los monitores proporcionan exclusión mutua porque:",
+        "opciones": [
+          "Sólo un proceso puede estar activo cada vez para ejecutar un procedimiento del monitor",
+          "Utilizan variables de condición",
+          "No proporcionan exclusión mutua sólo garantizan la sincronización",
+          "Se diseñan como procedimientos encapsulados en un módulo"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "En un sistema multiprocesador",
+        "opciones": [
+          "Solo pueden ejecutarse hilos del mismo proceso concurrentemente.",
+          "Varios hilos de un mismo proceso se pueden ejecutar simultáneamente.",
+          "Se pueden ejecutar varios hilos pero en el procesador asignado al proceso.",
+          "Ninguna de las anteriores es correcta"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes afirmaciones NO es correcta?",
+        "opciones": [
+          "Los semáforos solucionan el problema de la espera activa",
+          "Los semáforos solucionan el problema de la exclusión mutua y la sincronización",
+          "Los semáforos binarios sólo pueden ser usados simultáneamente por dos procesos",
+          "Los semáforos de cuenta pueden ser usados simultáneamente por cualquier número de procesos."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "En Linux, la llamada al sistema exec():",
+        "opciones": [
+          "Crea un nuevo proceso con la misma imagen del proceso actual y con un PID diferente.",
+          "Cambia la imagen (código) del proceso actual y le asigna un nuevo PID.",
+          "Carga una nueva imagen de código en la memoria del proceso actual.",
+          "Ejecuta el proceso hijo indicado en el parámetro de la llamada."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es la misión del planificador de largo plazo o planificador de alto nivel?",
+        "opciones": [
+          "Realizar el despacho de los procesos que están en la cola de preparados, y en particular realizar los cambios de contexto.",
+          "En los sistemas de tiempo real, realizar una planificación previa de la carga de trabajo que se va a enviar al sistema, para asegurar que se cumplen los plazos de ejecución.",
+          "Regular la admisión de nuevos procesos a la cola de preparados, para mantener el grado de multiprogramación por debajo de un límite.",
+          "Permitir la entrada de procesos en el sistema con un instante de ejecución posterior en el tiempo."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Si en un algoritmo Round Robin el cuanto de tiempo Q se hace excesivamente corto:",
+        "opciones": [
+          "El algoritmo degenera en un SJF.",
+          "El algoritmo degenera en un FCFS.",
+          "Disminuye la productividad del procesador porque se realizan muchos cambios de contexto.",
+          "Aumenta el impacto del efecto convoy (los procesos largos se mantienen en ejecución mientras los cortos se quedan esperando) si existe una combinación de procesos de larga y de corta duración."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál de estos algoritmos de reemplazo de páginas se apoya en el bit de referencia?",
+        "opciones": [
+          "FIFO.",
+          "OPT.",
+          "SJF.",
+          "Algoritmo del reloj / segunda oportunidad."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "La TLB es una estructura usada para:",
+        "opciones": [
+          "Reducir el tiempo de la traducción de direcciones de memoria.",
+          "Almacenar el estado de un proceso cuando ocurre un cambio de contexto.",
+          "Almacenar el estado de las páginas no válidas de un proceso.",
+          "Almacenar los punteros a las pilas de los procesos"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "¿Cuál es la diferencia entre un proceso «pesado» y un hilo (thread)?",
+        "opciones": [
+          "Un proceso pesado es una aplicación en ejecución, mientras que un hilo es una actividad concurrente dentro de una aplicación.",
+          "Un proceso pesado puede contener un hilo o ninguno, mientras que un hilo puede contener uno o más procesos pesados.",
+          "Un proceso pesado corre siempre en modo usuario, mientras que un hilo puede correr en modo usuario o modo supervisor/modo núcleo.",
+          "Un hilo puede pertenecer a varios procesos pero un proceso a un único hilo."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "El controlador de E/S y la memoria intercambian datos directamente, sin la intervención de la CPU, cuando se tiene:",
+        "opciones": [
+          "E/S controlada por programa",
+          "E/S por interrupciones",
+          "DMA",
+          "Ninguna de las anteriores"
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "En el enfoque \"Núcleo Fuera de Todo Proceso\", ¿cómo interactúan los procesos de usuario con el núcleo del sistema operativo?",
+        "opciones": [
+          "A través de comunicación interprocesos (IPC).",
+          "Comparten el espacio de direcciones con el núcleo.",
+          "Por medio de llamadas al sistema y solicitudes de servicios.",
+          "Ejecutando el núcleo como una biblioteca compartida."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Qué representa el valor del contador en la implementación interna de un semáforo en un sistema operativo?",
+        "opciones": [
+          "El número total de hilos en espera.",
+          "La cantidad de recursos gestionados por el semáforo.",
+          "El tiempo transcurrido desde la última operación \"V\" (Despertar).",
+          "La prioridad asignada a los procesos en la cola de espera."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes métricas es especialmente relevante en sistemas interactivos y afecta la percepción de la velocidad del sistema por parte del usuario?",
+        "opciones": [
+          "Throughput (Rendimiento)",
+          "Tiempo de Respuesta Promedio",
+          "Inanición (Starvation)",
+          "Criterios de Justicia (Fairness)"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "En el esquema de segmentación, ¿qué información contiene la tabla de descriptores de segmento?",
+        "opciones": [
+          "Dirección física completa de cada segmento.",
+          "Tamaño y dirección base de cada segmento.",
+          "Nombres y tamaños de los segmentos.",
+          "Números de página y desplazamientos."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál es una ventaja del paso de mensajes en comparación con los semáforos y monitores?",
+        "opciones": [
+          "Mayor eficiencia en sistemas de memoria compartida.",
+          "Comunicación explícita entre procesos.",
+          "Menor complejidad de implementación.",
+          "Flexibilidad en la sincronización."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Qué función cumple el número de marco de página en una entrada típica de la tabla de páginas en un sistema de memoria virtual?",
+        "opciones": [
+          "Indica la dirección lógica de la página.",
+          "Representa el desplazamiento dentro de la página.",
+          "Es un índice directo a la ubicación física de la página.",
+          "Define los permisos de acceso a la página."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Qué implica el concepto de reubicación en la gestión de memoria?",
+        "opciones": [
+          "La capacidad de cargar varios procesos en la memoria principal simultáneamente.",
+          "Ajustar las direcciones de memoria de un programa para ejecutarse en diferentes ubicaciones de memoria.",
+          "La asignación de espacio de direcciones fijo para cada proceso.",
+          "La carga dinámica de programas en tiempo de ejecución."
+        ],
+        "correcta": 1
+      }
+    ];
+
+    // --- SEPTIEMBRE 2023 ---
+    const septiembre2023 = [
+      {
+        "enunciado": "Sea el siguiente programa, indicar que respuesta es falsa. Program Ejemplo; Var a,b:integer; s1, s2: semaforo; procedure P1; begin wait(s1), a:=a+1; if a==2 then wait(s2); b:=2*a; signal(s2); signal(s1); end; procedure P2; begin wait(s2), wait(s1); a:=a+2; signal(s1); b:=2*b; signal(s2); end; Begin s1:=1; s2:=1 a:=0; b=2 cobegin p1; p2; coend; writeln(trunc(b/a)); end;",
+        "opciones": [
+          "Se pueden presentar interbloqueos.",
+          "La ejecución del programa podrá dar como resultado la impresión de un 4",
+          "La ejecución del programa podrá dar como resultado la impresión de un 1",
+          "La ejecución del programa podrá dar como resultado la impresión de un 2"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "El problema de esta solución software a la exclusión mutua es",
+        "opciones": [
+          "Se produce un interbloqueo independientemente de la velocidad relativa de los procesos",
+          "Se produce un interbloqueo en función de la velocidad relativa de los procesos",
+          "No se garantiza la exclusión mutua",
+          "Rompe la alternancia en la ejecución de los procesos"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "En un sistema que utiliza gestión de memoria real con particiones dinámicas, en un momento determinado la lista de huecos está compuesta por huecos de tamaño 10 KB, 15 KB, 17 KB y 12 KB. ¿Qué política de asignación utiliza el sistema, si ante una solicitud de un bloque de 13 KB lo coloca en el bloque de 17 KB?",
+        "opciones": [
+          "Ninguna del resto de las respuestas es correcta.",
+          "Mejor ajuste.",
+          "Primer ajuste.",
+          "Peor ajuste."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "La fragmentación interna",
+        "opciones": [
+          "Se produce con paginación y con segmentación.",
+          "Solo se produce en el último segmento de la tabla de segmentos del proceso",
+          "Se produce sólo cuando tenemos un sistema de memoria con paginación o particiones estáticas",
+          "Ninguna las anteriores es correcta."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Para permitir un mayor grado de multiprogramación",
+        "opciones": [
+          "Es preferible un sistema con un tamaño de página grande",
+          "El tamaño de página es indiferente.",
+          "Es mejor optar por páginas de un tamaño pequeño.",
+          "Ninguna del resto de las respuestas es correcta."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "El planificador (scheduler) es la parte del sistema operativo encargada de:",
+        "opciones": [
+          "Realizar el cambio de contexto entre los procesos.",
+          "Determinar el orden de ejecución entre los procesos",
+          "Mantener la tabla de procesos",
+          "Descargar los procesos a disco cuando la memoria del sistema escasea."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuándo puede un proceso entrar en un monitor?",
+        "opciones": [
+          "Sólo cuando tiene definidas variables de condición.",
+          "Sólo es necesario que el monitor se encuentre \"vacío\".",
+          "Hace falta que el monitor esté vacío y no haya procesos esperando en ninguna cola de condición.",
+          "Ninguna del resto de las contestaciones es correcta."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "Un hilo",
+        "opciones": [
+          "Es un procedimiento de un proceso que tiene asignado recursos.",
+          "Es la unidad propietaria de los recursos",
+          "Comparte la pila de ejecución con los otros hilos.",
+          "Ninguna de las anteriores es cierta."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "Los monitores proporcionan exclusión mutua porque:",
+        "opciones": [
+          "Sólo un proceso puede estar activo cada vez para ejecutar un procedimiento del monitor",
+          "Utilizan variables de condición",
+          "No proporcionan exclusión mutua sólo garantizan la sincronización",
+          "Se diseñan como procedimientos encapsulados en un módulo"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "En un sistema multiprocesador",
+        "opciones": [
+          "Solo pueden ejecutarse hilos del mismo proceso concurrentemente.",
+          "Varios hilos de un mismo proceso se pueden ejecutar simultáneamente.",
+          "Se pueden ejecutar varios hilos pero en el procesador asignado al proceso.",
+          "Ninguna de las anteriores es correcta"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes afirmaciones NO es correcta?",
+        "opciones": [
+          "Los semáforos solucionan el problema de la espera activa",
+          "Los semáforos solucionan el problema de la exclusión mutua y la sincronización",
+          "Los semáforos binarios sólo pueden ser usados simultáneamente por dos procesos",
+          "Los semáforos de cuenta pueden ser usados simultáneamente por cualquier número de procesos."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "La operación wait de un semáforo y la cwait de una variable de condición de un monitor se diferencian en:",
+        "opciones": [
+          "que cwait siempre se suspende el proceso que la invoca y wait no siempre",
+          "que en el caso de la variable de condición no se elimina la espera activa",
+          "No existe diferencia pues en ambos casos siempre sirve para lograr la exclusión mutua de la sección crítica",
+          "No existe diferencia pues en ambos casos siempre sirve como mecanismo de sincronización"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "Los métodos de planificación de procesos multicolas:",
+        "opciones": [
+          "Están especialmente indicados para entornos multiprocesadores.",
+          "Permiten aplicar políticas diferentes a distintas clases de procesos.",
+          "Evitan que los procesos largos monopolicen el uso de CPU.",
+          "Los procesos siempre pasan de una cola a otra."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "En Linux, la llamada al sistema exec():",
+        "opciones": [
+          "Crea un nuevo proceso con la misma imagen del proceso actual y con un PID diferente.",
+          "Cambia la imagen (código) del proceso actual y le asigna un nuevo PID.",
+          "Carga una nueva imagen de código en la memoria del proceso actual.",
+          "Ejecuta el proceso hijo indicado en el parámetro de la llamada."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuál es la misión del planificador de largo plazo o planificador de alto nivel?",
+        "opciones": [
+          "Realizar el despacho de los procesos que están en la cola de preparados, y en particular realizar los cambios de contexto.",
+          "En los sistemas de tiempo real, realizar una planificación previa de la carga de trabajo que se va a enviar al sistema, para asegurar que se cumplen los plazos de ejecución.",
+          "Regular la admisión de nuevos procesos a la cola de preparados, para mantener el grado de multiprogramación por debajo de un límite.",
+          "Permitir la entrada de procesos en el sistema con un instante de ejecución posterior en el tiempo."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "En un algoritmo de planificación Round Robin, ¿cuál de estas funciones queda a cargo del sistema de interrupciones?",
+        "opciones": [
+          "Recibir la señal del temporizador cuando finaliza un cuanto de tiempo.",
+          "Crear el bloque de control de proceso (BCP) de los procesos recién creados.",
+          "Actualizar las estadísticas de consumo de tiempo de cada proceso",
+          "Realizar el dispatch del proceso."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "La CPU de un computador está ejecutando ahora mismo un proceso P que entró en CPU hace 3 mseg. y sabemos que le restan otros 5 mseg. para terminar su ráfaga. Sabemos que dentro de 2 mseg. llegará al sistema un nuevo proceso Q que pretende ejecutar una ráfaga de CPU de 2 mseg. Si no ocurre ninguna incidencia más, ¿qué proceso estará ejecutándose en la CPU dentro de 3 mseg.?",
+        "opciones": [
+          "Si el algoritmo de planificación es un SJF no expulsivo, el proceso Q.",
+          "Si el algoritmo de planificación es un SJF expulsivo, el proceso Q.",
+          "Si el algoritmo de planificación es un FCFS, el proceso Q.",
+          "Si el algoritmo de planificación es un FCFS expulsivo, el proceso Q."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "Llega una interrupción procedente de un dispositivo de E/S mientras un proceso de usuario se está ejecutando. ¿Qué suele ocurrir justo a continuación?",
+        "opciones": [
+          "Se conmuta a modo kernel y se ejecuta la rutina de servicio de interrupción correspondiente.",
+          "Se conmuta a modo usuario para que el proceso gestione con la E/S de acuerdo con sus necesidades.",
+          "Se atiende la interrupción de forma inmediata, en el modo de operación en el que se encontraba el procesador en el momento de ocurrir la operación.",
+          "No puede llegar una interrupción de E/S si el proceso está ejecutando su quantum, sólo llega entre quantums."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "Si en un algoritmo Round Robin el cuanto de tiempo Q se hace excesivamente corto:",
+        "opciones": [
+          "El algoritmo degenera en un SJF.",
+          "El algoritmo degenera en un FCFS.",
+          "Disminuye la productividad del procesador porque se realizan muchos cambios de contexto.",
+          "Aumenta el impacto del efecto convoy (los procesos largos se mantienen en ejecución mientras los cortos se quedan esperando) si existe una combinación de procesos de larga y de corta duración."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Qué ocurre si le asignamos a un proceso menos páginas de las que forman su conjunto de trabajo (working set)?",
+        "opciones": [
+          "Aumentará el número de cambios de contexto en el sistema.",
+          "Disminuirá el tamaño de su tabla de páginas.",
+          "Que el proceso no podrá ejecutarse",
+          "El proceso generará fallos de página continuamente."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "¿Cuál de estos algoritmos de reemplazo de páginas se apoya en el bit de referencia?",
+        "opciones": [
+          "FIFO.",
+          "OPT.",
+          "SJF.",
+          "Algoritmo del reloj / segunda oportunidad."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "Tenemos un sistema de gestión de memoria con segmentación, con direcciones lógicas de 32 bits. Si cada proceso es capaz de manejar hasta 64 segmentos, ¿cuál es el tamaño máximo que puede llegar a tener un segmento?",
+        "opciones": [
+          "16 MB.",
+          "64 MB.",
+          "1 MB.",
+          "8 MB."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Qué es la MMU?",
+        "opciones": [
+          "Es el módulo del hardware encargado de la traducción de direcciones lógicas a direcciones físicas.",
+          "Es el módulo del sistema operativo encargado de detectar accesos a posiciones de memoria indebidas.",
+          "Es el módulo del sistema informático encargado de resolver los fallos de página y recuperar las páginas de la memoria secundaria.",
+          "Es el módulo hardware encargado de gestionar el intercambio de memoria y swap área."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "La TLB es una estructura usada para:",
+        "opciones": [
+          "Reducir el tiempo de la traducción de direcciones de memoria.",
+          "Almacenar el estado de un proceso cuando ocurre un cambio de contexto.",
+          "Almacenar el estado de las páginas no válidas de un proceso.",
+          "Almacenar los punteros a las pilas de los procesos"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "En un sistema que usa gestión de memoria paginada simple, cierto proceso necesita ocupar 2000 bytes de memoria principal. Si el tamaño de página utilizado es 512 bytes, ¿cuánta fragmentación provoca el proceso?",
+        "opciones": [
+          "Al menos 464 bytes de fragmentación externa.",
+          "Al menos 48 bytes de fragmentación externa.",
+          "Al menos 48 bytes de fragmentación interna.",
+          "Al menos 64 bytes de fragmentación interna."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Tenemos un sistema de gestión de memoria paginada simple. Las direcciones lógicas son de 32 bits y las direcciones físicas son de 48 bits. Si el tamaño de página es de 16 KB, ¿cuántas páginas distintas es capaz de manejar un proceso al mismo tiempo?",
+        "opciones": [
+          "2^18 páginas.",
+          "2^24 páginas.",
+          "2^16 páginas.",
+          "2^12 páginas."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "En un sistema de memoria paginada se ejecutan varios procesos pesados (procesos) e hilos. ¿Cuántas tablas de páginas diferentes existen en un momento dado?",
+        "opciones": [
+          "Sólo una multientrada gestionada por la MMU.",
+          "Tantas como procesos pesados hay.",
+          "Tantas como hilos hay.",
+          "Tantas como la suma de procesos pesados e hilos."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Qué característica peculiar tiene la instrucción test-and-set?",
+        "opciones": [
+          "Se ejecuta de forma atómica.",
+          "Sólo funciona en multiprocesadores.",
+          "Ejecuta dos acciones de forma simultánea (paralela).",
+          "Ejecuta el test y espera interrupción para el set."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "Tenemos una variable entera x que actualmente vale 1. Dos hilos acceden simultáneamente a x. Uno de ellos ejecuta la sentencia x=x+1 y el otro la sentencia x=x-1. Una vez que se ejecuten esas sentencias, ¿cuál será el valor de x?",
+        "opciones": [
+          "1.",
+          "0, 1 o 2.",
+          "0 0 2.",
+          "0"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál es el problema de utilizar espera activa para resolver la sincronización entre procesos?",
+        "opciones": [
+          "Se utiliza improductivamente tiempo del procesador.",
+          "No se resuelve del todo la sincronización, por ejemplo, si varios hilos ejecutan justo al mismo tiempo la espera activa.",
+          "No funciona en sistemas multiprocesadores de memoria compartida.",
+          "Que hay que esperar la activación por parte del S.O. para continuar la ejecución."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "Tenemos tres procesos en la cola de preparados. El primero quiere ejecutarse durante 3 mseg., otro durante 2 mseg. y el último 5 mseg. Sabemos que dentro de 3 mseg. llegará un proceso que pretende ejecutarse durante 1 mseg. Si la CPU actualmente está libre, ¿qué algoritmo de planificación producirá más cambios de contexto para esta carga de trabajo?",
+        "opciones": [
+          "FCFS.",
+          "Round-Robin con Q=2mseg.",
+          "SJF expulsivo.",
+          "Round-Robin con Q=8mseg."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál es la diferencia entre un proceso «pesado» y un hilo (thread)?",
+        "opciones": [
+          "Un proceso pesado es una aplicación en ejecución, mientras que un hilo es una actividad concurrente dentro de una aplicación.",
+          "Un proceso pesado puede contener un hilo o ninguno, mientras que un hilo puede contener uno o más procesos pesados.",
+          "Un proceso pesado corre siempre en modo usuario, mientras que un hilo puede correr en modo usuario o modo supervisor/modo núcleo.",
+          "Un hilo puede pertenecer a varios procesos pero un proceso a un único hilo."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "Para implementar de forma eficaz un esquema de protección de memoria basado en la pareja de registros base y límite, ¿cuál de estas características debe estar presente en el hardware?",
+        "opciones": [
+          "Un temporizador controlable por software.",
+          "Un procesador con dos modos de operación (user/kernel).",
+          "Una jerarquía de memorias de al menos dos niveles.",
+          "El controlador de interrupciones"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "El núcleo del sistema operativo:",
+        "opciones": [
+          "Está cargado en memoria principal de forma permanente.",
+          "Contiene los programas del sistema.",
+          "Su tamaño depende del número de procesos a gestionar.",
+          "Virtualiza las distintas interfaces que puede ofrecer el sistema operativo."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "El hardware puede activar directamente al sistema operativo?",
+        "opciones": [
+          "Sí, por ejemplo, mediante una interrupción.",
+          "No, el sistema operativo sólo se activa mediante software.",
+          "No, se requiere una instrucción TRAP.",
+          "No, todos los eventos del hardware deben pasar por el núcleo."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "Si dispusiéramos de memoria infinita, ¿qué servicio dejaría de tener sentido?",
+        "opciones": [
+          "La gestión de zonas de la memoria libres y ocupadas.",
+          "La protección del área de memoria de los procesos.",
+          "La protección del área de memoria ocupada por el sistema operativo.",
+          "La memoria virtual paginada."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "¿Cuál de estos algoritmos de planificación de CPU por definición no puede ser expulsivo?",
+        "opciones": [
+          "FCFS.",
+          "Round Robin.",
+          "SJF.",
+          "SJF con prioridades."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "Se tienen dos procesos: P1 y P2, de tiempos de ejecución 25 y 30 ms, respectivamente. El planificador a corto plazo actúa según el algoritmo Round Robin con quantum de 10 ms. ¿Cuál será el tiempo de retorno o regreso de P2?",
+        "opciones": [
+          "45 ms.",
+          "55 ms.",
+          "60 ms.",
+          "70 ms."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "El controlador de E/S y la memoria intercambian datos directamente, sin la intervención de la CPU, cuando se tiene:",
+        "opciones": [
+          "E/S controlada por programa",
+          "E/S por interrupciones",
+          "DMA",
+          "Ninguna de las anteriores"
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "La sincronización mediante monitor:",
+        "opciones": [
+          "Esta implícita, basta con invocar al procedimiento correspondiente del monitor",
+          "Se consigue porque existe una cola asociada a cada procedimiento del monitor",
+          "Se consigue porque existe una única cola asociada a todos los procedimientos del monitor",
+          "Se consigue mediante la utilización de variables de condición"
+        ],
+        "correcta": 3
+      }
+    ];
+
+    // --- ENERO 2023 ---
+    const enero2023 = [
+      {
+        "enunciado": "Sea el siguiente programa, indicar que respuesta es falsa. Program Ejemplo; Var a,b:integer; s1, s2: semaforo; procedure P1; begin wait(s1), a:=a+1; if a==2 then wait(s2); b:=2*a; signal(s2); signal(s1); end; procedure P2; begin wait(s2), wait(s1); a:=a+2; signal(s1); b:=2*b; signal(s2); end; Begin s1:=1; s2:=1 a:=0; b=2 cobegin p1; p2; coend; writeln(trunc(b/a)); end;",
+        "opciones": [
+          "Se pueden presentar interbloqueos. ",
+          "La ejecución del programa podrá dar como resultado la impresión de un 4",
+          "La ejecución del programa podrá dar como resultado la impresión de un 1",
+          "La ejecución del programa podrá dar como resultado la impresión de un 2"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "El problema de esta solución software a la exclusión mutua es",
+        "opciones": [
+          "Se produce un interbloqueo independientemente de la velocidad relativa de los procesos",
+          "Se produce un interbloqueo en función de la velocidad relativa de los procesos",
+          "No se garantiza la exclusión mutua",
+          "Rompe la alternancia en la ejecución de los procesos"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "En un sistema que utiliza gestión de memoria real con particiones dinámicas, en un momento determinado la lista de huecos está compuesta por huecos de tamaño 10 KB, 15 KB, 17 KB y 12 KB. ¿Qué política de asignación utiliza el sistema, si ante una solicitud de un bloque de 13 KB lo coloca en el bloque de 17 KB?",
+        "opciones": [
+          "Ninguna del resto de las respuestas es correcta.",
+          "Mejor ajuste.",
+          "Primer ajuste.",
+          "Peor ajuste."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "La fragmentación interna",
+        "opciones": [
+          "Se produce con paginación y con segmentación.",
+          "Solo se produce en el último segmento de la tabla de segmentos del proceso",
+          "Se produce sólo cuando tenemos un sistema de memoria con paginación o particiones estáticas",
+          "Ninguna las anteriores es correcta."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Para permitir un mayor grado de multiprogramación",
+        "opciones": [
+          "Es preferible un sistema con un tamaño de página grande.",
+          "El tamaño de página es indiferente.",
+          "Es mejor optar por páginas de un tamaño pequeño.",
+          "Ninguna del resto de las respuestas es correcta."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Un hilo",
+        "opciones": [
+          "Es un procedimiento de un proceso que tiene asignado recursos.",
+          "Es la unidad propietaria de los recursos",
+          "Comparte la pila de ejecución con los otros hilos.",
+          "Ninguna de las anteriores es cierta."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "Los monitores proporcionan exclusión mutua porque:",
+        "opciones": [
+          "Sólo un proceso puede estar activo cada vez para ejecutar un procedimiento del monitor",
+          "Utilizan variables de condición",
+          "No proporcionan exclusión mutua sólo garantizan la sincronización",
+          "Se diseñan como procedimientos encapsulados en un módulo"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "En un sistema multiprocesador",
+        "opciones": [
+          "Solo pueden ejecutarse hilos del mismo proceso concurrentemente.",
+          "Varios hilos de un mismo proceso se pueden ejecutar simultáneamente.",
+          "Se pueden ejecutar varios hilos pero en el procesador asignado al proceso.",
+          "Ninguna de las anteriores es correcta"
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "¿Cuál de las siguientes afirmaciones NO es correcta?",
+        "opciones": [
+          "Los semáforos solucionan el problema de la espera activa",
+          "Los semáforos solucionan el problema de la exclusión mutua y la sincronización",
+          "Los semáforos binarios sólo pueden ser usados simultáneamente por dos procesos",
+          "Los semáforos de cuenta pueden ser usados simultáneamente por cualquier número de procesos."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "La operación wait de un semáforo y la cwait de una variable de condición de un monitor se diferencian en:",
+        "opciones": [
+          "que cwait siempre se suspende el proceso que la invoca y wait no siempre",
+          "que en el caso de la variable de condición no se elimina la espera activa",
+          "No existe diferencia pues en ambos casos siempre sirve para lograr la exclusión mutua de la sección crítica",
+          "No existe diferencia pues en ambos casos siempre sirve como mecanismo de sincronización"
+        ],
+        "correcta": 0
+      }
+    ];
+
+    // --- NOVIEMBRE 2022 ---
+    const noviembre2022 = [
+      {
+        "enunciado": "En el bloque de control de procesos",
+        "opciones": [
+          "Existe información para la planificación de la CPU",
+          "No existe información para la planificación de la CPU, esta se almacena en el Planificador.",
+          "La única información de planificación existente son los punteros a las colas de planificación.",
+          "Ninguna de las anteriores es correcta."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "Un proceso abandona el estado de ejecución y pasa directamente al de listo para ejecución",
+        "opciones": [
+          "Ninguna del resto de las respuestas es correcta.",
+          "Sólo cuando el proceso ha ejecutado una operación \"sleep\".",
+          "Necesariamente se utiliza una política de planificación preemtiva.",
+          "Únicamente en políticas de planificación no preemtivas"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "Cuando un proceso está en el estado \"Nuevo\":",
+        "opciones": [
+          "Su código, datos y PCB ya están cargados en memoria.",
+          "Solo su código y datos están en memoria principal.",
+          "El PCB existe pero ni datos ni código están en memoria.",
+          "Solo el PCB y el código están cargados en memoria, los datos se cargan al entrar a listo."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "Para permitir un mayor grado de multiprogramación",
+        "opciones": [
+          "Es preferible un sistema con un tamaño de página grande.",
+          "El tamaño de página es indiferente.",
+          "Es mejor optar por páginas de un tamaño pequeño.",
+          "Ninguna del resto de las respuestas es correcta."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "El planificador a corto plazo",
+        "opciones": [
+          "Rebaja el grado de multiprogramación del sistema.",
+          "Elige procesos para pasarlos a ejecución.",
+          "Pasa procesos de esperando a bloqueado suspendido.",
+          "Pasa procesos de creados a ejecutando."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "Las llamadas al sistema",
+        "opciones": [
+          "Son órdenes que tiene definidas el shell del sistema para realizar distintas funciones.",
+          "Son funciones internas del shell del sistema y sólo éste puede utilizarlas.",
+          "Se ejecutan en modo kernel si el usuario lo solicita.",
+          "Siempre se ejecutan en modo kernel."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "Un hilo",
+        "opciones": [
+          "Es un procedimiento de un proceso que tiene asignado recursos.",
+          "Es la unidad propietaria de los recursos",
+          "Comparte la pila de ejecución con los otros hilos.",
+          "Ninguna de las anteriores es cierta."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "Para la programación con hilos",
+        "opciones": [
+          "Se necesitan mecanismos de exclusión mutua para acceder a los recursos compartidos lectura/escritura.",
+          "Se necesitan mecanismos de exclusión mutua para acceder a todos los recursos compartidos",
+          "Se necesitan mecanismos de exclusión mutua para acceder a los recursos compartidos solo lectura.",
+          "Pueden acceder a los recursos compartidos del proceso sin ninguna restricción."
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "En un sistema multiprocesador",
+        "opciones": [
+          "Solo pueden ejecutarse hilos del mismo proceso concurrentemente.",
+          "Varios hilos de un mismo proceso se pueden ejecutar simultáneamente.",
+          "Se pueden ejecutar varios hilos pero en el procesador asignado al proceso.",
+          "Ninguna de las anteriores es correcta."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "Un proceso que entra en el sistema a las 12:00 horas, empieza su ejecución a las 12:02 y termina a las 12:30.",
+        "opciones": [
+          "La utilización de la CPU es de 28 minutos.",
+          "El tiempo de respuesta es de 2 minutos.",
+          "El tiempo de espera es de 2 minutos.",
+          "El tiempo de retorno es de 28 minutos."
+        ],
+        "correcta": 1
+      }
+    ];
+
+    // --- ENERO 2022 ---
+    const enero2022 = [
+      {
+        "enunciado": "En un Sistema de memoria paginada con un tamaño de marco de página de 2KB",
+        "opciones": [
+          "El offset máximo de una página es 2^16",
+          "El offset máximo de una página es 2^12",
+          "El offset máximo de una página es 2^11",
+          "El offset máximo de una página es 2^10"
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "El repartidor (dispatcher) se encarga de:",
+        "opciones": [
+          "Planificar los distintos trabajos",
+          "Definir las políticas de planificación",
+          "Realizar el cambio de contexto.",
+          "Desbloquear los procesos que están esperando una E/S cuando ésta finaliza"
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "El planificador (scheduler) es la parte del sistema operativo encargada de:",
+        "opciones": [
+          "Realizar el cambio de contexto entre los procesos.",
+          "Determinar el orden de ejecución entre los procesos",
+          "Mantener la tabla de procesos",
+          "Descargar los procesos a disco cuando la memoria del sistema escasea."
+        ],
+        "correcta": 1
+      },
+      {
+        "enunciado": "Señala la respuesta correcta en relación a los algoritmos de planificación de procesos apropiativos",
+        "opciones": [
+          "Nunca fuerzan a que el proceso en ejecución abandone la CPU si está realizando una operación de E/S",
+          "Fuerzan a que el proceso en CPU abandone la CPU únicamente cuando se le acaba el quantum",
+          "Son más costosos en relación al tiempo que se tarda en cambiar de proceso pero dan mejor servicio al conjunto de procesos.",
+          "Son más efectivas cuanta menos memoria principal esté asignada al conjunto de procesos"
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "¿Cuándo puede un proceso entrar en un monitor?",
+        "opciones": [
+          "Sólo cuando tiene definidas variables de condición.",
+          "Sólo es necesario que el monitor se encuentre \"vacío\"..",
+          "Hace falta que el monitor esté vacío y no haya procesos esperando en ninguna cola de condición.",
+          "Ninguna del resto de las contestaciones es correcta."
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "El semáforo elimina la espera activa porque:",
+        "opciones": [
+          "Se inicializa al número máximo de recursos que se comparten",
+          "Las operaciones de wait y signal no se pueden emplear en bucles",
+          "Deshabilita el uso de interrupciones dentro de la sección crítica.",
+          "Se implementa con una cola de tareas a la cual se añaden los procesos que están en espera del recurso."
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "Los monitores proporcionan exclusión mutua porque:",
+        "opciones": [
+          "Sólo un proceso puede estar activo cada vez para ejecutar un procedimiento del monitor",
+          "Utilizan variables de condición",
+          "No proporcionan exclusión mutua sólo garantizan la sincronización",
+          "Se diseñan como procedimientos encapsulados en un módulo"
+        ],
+        "correcta": 0
+      },
+      {
+        "enunciado": "En un sistema de memoria virtual",
+        "opciones": [
+          "No es necesario el intercambio",
+          "El intercambio se realizará solo con las páginas que están en el estado suspendido",
+          "El sistema operativo nunca traerá a memoria una página de un proceso bloqueado",
+          "Con el intercambio parte de las páginas de un proceso pueden estar en memoria secundaria"
+        ],
+        "correcta": 3
+      },
+      {
+        "enunciado": "Si nuestro sistema operativo soporta memoria virtual, cuando tratamos de acceder a una página que no ha sido cargada, ¿cómo se detecta?",
+        "opciones": [
+          "Porque el bus de direcciones tiene una dirección inválida",
+          "Porque no existe el marco de página en memoria principal",
+          "Gracias a los bits de control de su entrada en la tabla de páginas.",
+          "Ninguna de las afirmaciones anteriores es correcta"
+        ],
+        "correcta": 2
+      },
+      {
+        "enunciado": "La operación wait de un semáforo y la cwait de una variable de condición de un monitor se diferencian en:",
+        "opciones": [
+          "que cwait siempre se suspende el proceso que la invoca y wait no siempre",
+          "que en el caso de la variable de condición no se elimina la espera activa",
+          "No existe diferencia pues en ambos casos siempre sirve para lograr la exclusión mutua de la sección crítica",
+          "No existe diferencia pues en ambos casos siempre sirve como mecanismo de sincronización"
+        ],
+        "correcta": 0
+      }
+    ];
+
+    let examenActual = [];
+
+    function cargarPreguntas() {
+      const seleccion = document.getElementById("examSelect").value;
+      const form = document.getElementById("quizForm");
+      form.innerHTML = ""; // Limpiar preguntas previas
+      
+      // LOGICA DE SELECCION
+      if (seleccion === "enero2026") {
+        examenActual = enero2026;
+      }
+      else if (seleccion === "julio2025") {
+        examenActual = julio2025;
+      }
+      else if (seleccion === "enero2025") {
+        examenActual = enero2025;
+      }
+      else if (seleccion === "noviembre2024") {
+        examenActual = noviembre2024;
+      }
+      else if (seleccion === "septiembre2024") {
+        examenActual = septiembre2024;
+      } 
+      else if (seleccion === "enero2024") {
+        examenActual = enero2024;
+      }
+      else if (seleccion === "septiembre2023") {
+        examenActual = septiembre2023;
+      }
+      else if (seleccion === "enero2023") {
+        examenActual = enero2023;
+      }
+      else if (seleccion === "noviembre2022") {
+        examenActual = noviembre2022;
+      }
+      else if (seleccion === "enero2022") {
+        examenActual = enero2022;
+      }
+      else if (seleccion === "todos") {
+        // AÑADIDO ENERO 2026 AL ARRAY TOTAL
+        examenActual = [...enero2026, ...julio2025, ...enero2025, ...noviembre2024, ...septiembre2024, ...enero2024, ...septiembre2023, ...enero2023, ...noviembre2022, ...enero2022];
+
+        // Mezclar preguntas
+        mezclarArray(examenActual);
+
+        // Mezclar opciones de cada pregunta
+        examenActual.forEach(p => {
+          const original = [...p.opciones];
+          const correcta = p.opciones[p.correcta];
+
+          mezclarArray(p.opciones);
+          p.correcta = p.opciones.indexOf(correcta);
+        });
+      }
+      else {
+        examenActual = [];
+      }
+
+      examenActual.forEach((p, i) => {
+        const div = document.createElement("div"); div.className = "question";
+        const h3 = document.createElement("h3"); h3.innerText = `${i + 1}. ${p.enunciado}`; div.appendChild(h3);
+        p.opciones.forEach((opt, j) => {
+          const label = document.createElement("label");
+          const input = document.createElement("input"); input.type = "radio"; input.name = `preg${i}`; input.value = j;
+          label.appendChild(input); label.append(` ${opt}`);
+          div.appendChild(label);
+        });
+        form.appendChild(div);
+      });
+
+      document.getElementById("result").style.display = "none"; // Oculta resultados si había
+    }
+
+
+    function corregir() {
+      if (examenActual.length === 0) {
+        alert("Primero selecciona un examen.");
+        return;
+      }
+
+      let aciertos = 0;
+      let salida = "<h2>Resultados:</h2><ul>";
+
+      examenActual.forEach((p, i) => {
+        const sel = document.querySelector(`input[name=preg${i}]:checked`);
+        const contenedor = document.querySelectorAll(".question")[i];
+
+        let resultadoTexto = "";
+        if (sel) {
+          if (parseInt(sel.value) === p.correcta) {
+            aciertos++;
+            resultadoTexto = `<p class="correct">✅ Correcta</p>`;
+            salida += `<li class='correct'>Pregunta ${i + 1}: Correcta</li>`;
+          } else {
+            resultadoTexto = `<p class="incorrect">❌ Incorrecta. Respuesta correcta: <strong>${p.opciones[p.correcta]}</strong></p>`;
+            salida += `<li class='incorrect'>Pregunta ${i + 1}: Incorrecta. Correcta: ${p.opciones[p.correcta]}</li>`;
+          }
+        } else {
+          resultadoTexto = `<p class="incorrect">⚠️ Sin responder. Respuesta correcta: <strong>${p.opciones[p.correcta]}</strong></p>`;
+          salida += `<li class='incorrect'>Pregunta ${i + 1}: Sin responder. Correcta: ${p.opciones[p.correcta]}</li>`;
+        }
+
+        // Insertar el resultado debajo de la pregunta
+        // Limpiar resultados anteriores en la misma pregunta si existen
+        const resultadosPrevios = contenedor.querySelectorAll(".correct, .incorrect");
+        resultadosPrevios.forEach(el => el.remove());
+
+        const parrafoResultado = document.createElement("div");
+        parrafoResultado.innerHTML = resultadoTexto;
+        contenedor.appendChild(parrafoResultado);
+      });
+
+      salida += `<p><strong>Total: ${aciertos} de ${examenActual.length} correctas.</strong></p>`;
+      const res = document.getElementById("result");
+      res.innerHTML = salida;
+      res.style.display = "block";
+      window.scrollTo({ top: res.offsetTop, behavior: 'smooth' });
+    }
+
+
+    function mezclarArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>
